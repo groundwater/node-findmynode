@@ -1,0 +1,46 @@
+#!/usr/bin/env node
+var mdns = require('mdns2');
+var argv = require('optimist')
+.describe('name', 'name')
+.alias('n', 'name')
+.argv;
+
+function help() {
+  var fs = require('fs');
+  process.stdout.write(
+    fs.readFileSync(__dirname + '/usage.txt', 'utf-8')
+  );
+}
+
+var type = argv._[0];
+var name = argv.name;
+
+if (argv.help) return help();
+if (!type) {
+  help();
+
+  // indicate error with discover is called incorrectly
+  return process.exit(1);
+}
+
+var browser = mdns.createBrowser(mdns.tcp(type));
+
+browser.on('serviceUp', function(service) {
+  if (!service.addresses) return;
+  
+  var address = service.addresses.pop();
+  
+  var out = {
+    address : address,
+    port    : service.port,
+    name    : service.name,
+    type    : service.type.name
+  };
+  
+  if (name && out.name !== name) return;
+  if (type && out.type !== type) return;
+
+  console.log(JSON.stringify(out));
+});
+
+browser.start();

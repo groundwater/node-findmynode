@@ -1,0 +1,14 @@
+{
+  "name": "findmynode",
+  "version": "0.0.0",
+  "description": "Dynamic Service Discovery over mDNS",
+  "bin": {
+    "discover": "discover"
+  },
+  "author": "Jacob Groundwater <groundwater@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "mdns2": "~2.1.3",
+    "optimist": "~0.6.0"
+  }
+}
